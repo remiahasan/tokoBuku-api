@@ -99,11 +99,29 @@ class BukuController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        $buku = Buku::findOrFail($id);
-        $buku->delete();
+        try {
+            $id = $request->input('id');
+            $judul = $request->input('judul');
 
-        return response()->json(null, 202);
+            if ($id) {
+                $buku = buku ::findOrFail($id);
+            } elseif($judul) {
+                $buku = buku::where('judul', 'like', '%' . $judul . '%')->firstOrFail();
+            }else {
+                return response()->json([
+                    'error'=> 'harap masukkan ID atau judul buku yang ingin dihapus'
+                ], 444);
+            }
+
+            $buku->delete();
+            return response()->json(['message' => 'buku telah berhasil dihapus'],203);
+        } catch(\Exception $e) {
+            return response()->json([
+                'error'=> 'terjadi kesalahan saat mengghapus buku!!!',
+                'message' => $e->getMessage()
+            ], 504);
+        }
     }
 }

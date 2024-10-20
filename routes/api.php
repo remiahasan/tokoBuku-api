@@ -9,5 +9,6 @@ use Illuminate\Support\Facades\Route;
 // })->middleware('auth:sanctum');
 
 Route::get('/bukus/search', [BukuController::class, 'search']);
+Route::delete('/bukus/delete', [BukuController::class, 'destroy']);
 Route::apiResource('kategoris', KategoriController::class);
 Route::apiResource('bukus', BukuController::class);
