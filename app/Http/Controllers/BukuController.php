@@ -38,9 +38,22 @@ class BukuController extends Controller
     {
         try {
             $kategori = $request->input('kategori');
-            $buku = Buku::whereHas('kategori', function ($query) use ($kategori) {
-                $query->where('nama_kategori', 'like', '%' . $kategori . '%');
-            })->get();
+            $judul = $request->input('judul');
+            $penulis = $request->input('penulis');
+
+            $buku = Buku::when($kategori, function ($query) use ($kategori) {
+                $query->whereHas('kategori', function ($query) use ($kategori) {
+                    $query->where('nama_kategori', 'like', '%' . $kategori . '%');
+                });
+            })
+            ->when($judul, function ($query) use ($judul) {
+                $query->where('judul', 'like', '%' . $judul . '%');
+            })
+            ->when($penulis, function($query)use($penulis) {
+                $query->where('penulis', 'like', '%' . $penulis . '%');
+            }
+            )
+            ->get();
 
             return response()->json($buku, 202);
         } catch (\Exception $e) {
