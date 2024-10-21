@@ -55,7 +55,7 @@ class BukuController extends Controller
             )
             ->get();
 
-            return response()->json($buku, 202);
+            return response()->json($buku, 200);
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Terjadi kesalahan saat mencari buku',
